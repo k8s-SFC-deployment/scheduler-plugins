@@ -250,3 +250,24 @@ func SetDefaults_SySchedArgs(obj *SySchedArgs) {
 		obj.DefaultProfileName = &DefaultSySchedProfileName
 	}
 }
+
+// SetDefaults_NetworkTrafficArgs sets the default parameters for NetworkTraffic plugin.
+func SetDefaults_NetworkTrafficArgs(args *NetworkTrafficArgs) {
+	if args.TimeRangeInMinutes == nil {
+		defaultTime := int64(5)
+		args.TimeRangeInMinutes = &defaultTime
+	}
+
+	if args.NetworkInterface == nil || *args.NetworkInterface == "" {
+		netInterface := "ens192"
+		args.NetworkInterface = &netInterface
+	}
+}
+
+// SetDefaults_NetMarksArgs sets the default parameters for NetMarks plugin.
+func SetDefaults_NetMarksArgs(args *NetMarksArgs) {
+	if args.TimeRangeInMinutes == nil {
+		defaultTime := int64(5)
+		args.TimeRangeInMinutes = &defaultTime
+	}
+}
