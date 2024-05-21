@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	nodeMeasureQueryTemplate = "sum_over_time(node_network_receive_bytes_total{instance=\"%s\",device=\"%s\"}[%s])"
+	nodeMeasureQueryTemplate = "sum_over_time(node_network_receive_bytes_total{node=\"%s\",device=\"%s\"}[%s])"
 )
 
 type PrometheusHandle struct {

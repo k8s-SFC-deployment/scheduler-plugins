@@ -51,6 +51,7 @@ func (n *NetMarks) Score(ctx context.Context, state *framework.CycleState, p *v1
 	}
 
 	// Get Pod list in Node
+	// TODO: erase testbed, replace with arg variable
 	podsInNode, err := n.handle.ClientSet().CoreV1().Pods("testbed").List(context.TODO(), metav1.ListOptions{
 		FieldSelector: "spec.nodeName=" + nodeName,
 	})

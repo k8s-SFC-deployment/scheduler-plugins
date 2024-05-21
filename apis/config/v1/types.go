@@ -291,3 +291,14 @@ type NetMarksArgs struct {
 	// TimeRangeInMinutes used to aggregate the network metrics
 	TimeRangeInMinutes *int64 `json:"timeRangeInMinutes,omitempty"`
 }
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +k8s:defaulter-gen=true
+
+// RemoteScoringArgs holds arguments used to configure RemoteScoring plugin
+type RemoteScoringArgs struct {
+	metav1.TypeMeta `json:",inline"`
+
+	// Address of the Remote Server
+	Address *string `json:"remoteServerAddress,omitempty"`
+}

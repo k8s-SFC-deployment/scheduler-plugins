@@ -35,6 +35,7 @@ import (
 	"sigs.k8s.io/scheduler-plugins/pkg/podstate"
 	"sigs.k8s.io/scheduler-plugins/pkg/preemptiontoleration"
 	"sigs.k8s.io/scheduler-plugins/pkg/qos"
+	"sigs.k8s.io/scheduler-plugins/pkg/remotescoring"
 	"sigs.k8s.io/scheduler-plugins/pkg/sysched"
 	"sigs.k8s.io/scheduler-plugins/pkg/trimaran/loadvariationriskbalancing"
 	"sigs.k8s.io/scheduler-plugins/pkg/trimaran/lowriskovercommitment"
@@ -66,6 +67,7 @@ func main() {
 		app.WithPlugin(qos.Name, qos.New),
 		app.WithPlugin(networktraffic.Name, networktraffic.New),
 		app.WithPlugin(netmarks.Name, netmarks.New),
+		app.WithPlugin(remotescoring.Name, remotescoring.New),
 	)
 
 	code := cli.Run(command)

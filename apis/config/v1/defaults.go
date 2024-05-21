@@ -271,3 +271,11 @@ func SetDefaults_NetMarksArgs(args *NetMarksArgs) {
 		args.TimeRangeInMinutes = &defaultTime
 	}
 }
+
+// SetDefault_RemoteScoringArgs sets the default parameters for RemoteScoring plugin.
+func SetDefault_ScoringArgs(args *RemoteScoringArgs) {
+	if args.Address == nil {
+		address := "http://localhost:7029"
+		args.Address = &address
+	}
+}

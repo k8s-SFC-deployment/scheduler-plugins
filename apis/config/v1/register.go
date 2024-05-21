@@ -48,6 +48,7 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&SySchedArgs{},
 		&NetworkTrafficArgs{},
 		&NetMarksArgs{},
+		&RemoteScoringArgs{},
 	)
 	return nil
 }
