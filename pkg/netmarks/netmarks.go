@@ -3,6 +3,7 @@ package netmarks
 import (
 	"context"
 	"fmt"
+	"slices"
 	"time"
 
 	v1 "k8s.io/api/core/v1"
@@ -16,6 +17,7 @@ import (
 type NetMarks struct {
 	handle     framework.Handle
 	prometheus *PrometheusHandle
+	namespaces []string
 }
 
 const Name = "NetMarks"
@@ -33,6 +35,7 @@ func New(obj runtime.Object, h framework.Handle) (framework.Plugin, error) {
 	return &NetMarks{
 		handle:     h,
 		prometheus: NewPrometheus(args.Address, time.Minute*time.Duration(args.TimeRangeInMinutes)),
+		namespaces: args.Namespaces,
 	}, nil
 }
 
@@ -41,6 +44,10 @@ func (n *NetMarks) Name() string {
 }
 
 func (n *NetMarks) Score(ctx context.Context, state *framework.CycleState, p *v1.Pod, nodeName string) (int64, *framework.Status) {
+	if slices.Contains(n.namespaces, p.Namespace) {
+		klog.Infof("[RemoteScoring] Skip pod(%s) in namespace(%s)\n", p.Name, p.Namespace)
+		return 0, nil
+	}
 	// Get dependent Services with target Pod
 	dptSvcs, err := n.prometheus.GetDependentServicesQuery(context.TODO(), p.Labels["service.istio.io/canonical-name"])
 	if err != nil {
@@ -50,9 +57,7 @@ func (n *NetMarks) Score(ctx context.Context, state *framework.CycleState, p *v1
 		fmt.Printf("[NetMarks] pod (%s) depend on service (%s)\n", p.Name, dstWorkloadName)
 	}
 
-	// Get Pod list in Node
-	// TODO: erase testbed, replace with arg variable
-	podsInNode, err := n.handle.ClientSet().CoreV1().Pods("testbed").List(context.TODO(), metav1.ListOptions{
+	podsInNode, err := n.handle.ClientSet().CoreV1().Pods(p.Namespace).List(context.TODO(), metav1.ListOptions{
 		FieldSelector: "spec.nodeName=" + nodeName,
 	})
 	if err != nil {

@@ -3,6 +3,7 @@ package remotescoring
 import (
 	"context"
 	"fmt"
+	"slices"
 
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -61,6 +62,11 @@ func (pl *RemoteScoring) PreScore(ctx context.Context, cycleState *framework.Cyc
 	// time.Sleep(10 * time.Second)
 	// klog.Infof("[RemoteScoring] Sleep End")
 
+	if slices.Contains(pl.args.Namespaces, pod.Namespace) {
+		klog.Infof("[RemoteScoring] Skip pod(%s) in namespace(%s)\n", pod.Name, pod.Namespace)
+		return nil
+	}
+
 	nodeNames := make([]string, 0)
 	for _, node := range nodes {
 		nodeNames = append(nodeNames, node.Name)
@@ -69,7 +75,8 @@ func (pl *RemoteScoring) PreScore(ctx context.Context, cycleState *framework.Cyc
 	for key, value := range pod.Labels {
 		podLabels = append(podLabels, fmt.Sprintf("%s=%s", key, value))
 	}
-	scores, err := remoteCall(pl.args.Address, nodeNames, podLabels)
+
+	scores, err := remoteCall(pl.args.Address, nodeNames, podLabels, pl.args.Namespaces)
 	if err != nil {
 		return nil
 	}
@@ -93,6 +100,11 @@ func (pl *RemoteScoring) ScoreExtensions() framework.ScoreExtensions {
 }
 
 func (pl *RemoteScoring) Score(ctx context.Context, cycleState *framework.CycleState, pod *v1.Pod, nodeName string) (int64, *framework.Status) {
+	if slices.Contains(pl.args.Namespaces, pod.Namespace) {
+		klog.Infof("[RemoteScoring] Skip pod(%s) in namespace(%s)\n", pod.Name, pod.Namespace)
+		return 0, nil
+	}
+
 	nodeScores, err := getPreScoreState(cycleState)
 	if err != nil {
 		klog.Fatal("[RemoteScoring] getPreScoreState: %s", err.Error())

@@ -181,6 +181,11 @@ func (in *NetMarksArgs) DeepCopyInto(out *NetMarksArgs) {
 		*out = new(int64)
 		**out = **in
 	}
+	if in.Namespaces != nil {
+		in, out := &in.Namespaces, &out.Namespaces
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 
@@ -426,6 +431,11 @@ func (in *RemoteScoringArgs) DeepCopyInto(out *RemoteScoringArgs) {
 		in, out := &in.Address, &out.Address
 		*out = new(string)
 		**out = **in
+	}
+	if in.Namespaces != nil {
+		in, out := &in.Namespaces, &out.Namespaces
+		*out = make([]string, len(*in))
+		copy(*out, *in)
 	}
 	return
 }

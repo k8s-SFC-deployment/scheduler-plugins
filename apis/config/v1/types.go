@@ -290,6 +290,8 @@ type NetMarksArgs struct {
 	Address *string `json:"prometheusAddress,omitempty"`
 	// TimeRangeInMinutes used to aggregate the network metrics
 	TimeRangeInMinutes *int64 `json:"timeRangeInMinutes,omitempty"`
+	// Namespaces to be considered by NetMarks plugin
+	Namespaces []string `json:"namespaces,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -301,4 +303,6 @@ type RemoteScoringArgs struct {
 
 	// Address of the Remote Server
 	Address *string `json:"remoteServerAddress,omitempty"`
+	// Namespaces to be considered by RemoteScoring plugin
+	Namespaces []string `json:"namespaces,omitempty"`
 }

@@ -356,6 +356,7 @@ func autoConvert_v1_NetMarksArgs_To_config_NetMarksArgs(in *NetMarksArgs, out *c
 	if err := metav1.Convert_Pointer_int64_To_int64(&in.TimeRangeInMinutes, &out.TimeRangeInMinutes, s); err != nil {
 		return err
 	}
+	out.Namespaces = *(*[]string)(unsafe.Pointer(&in.Namespaces))
 	return nil
 }
 
@@ -371,6 +372,7 @@ func autoConvert_config_NetMarksArgs_To_v1_NetMarksArgs(in *config.NetMarksArgs,
 	if err := metav1.Convert_int64_To_Pointer_int64(&in.TimeRangeInMinutes, &out.TimeRangeInMinutes, s); err != nil {
 		return err
 	}
+	out.Namespaces = *(*[]string)(unsafe.Pointer(&in.Namespaces))
 	return nil
 }
 
@@ -547,6 +549,7 @@ func autoConvert_v1_RemoteScoringArgs_To_config_RemoteScoringArgs(in *RemoteScor
 	if err := metav1.Convert_Pointer_string_To_string(&in.Address, &out.Address, s); err != nil {
 		return err
 	}
+	out.Namespaces = *(*[]string)(unsafe.Pointer(&in.Namespaces))
 	return nil
 }
 
@@ -559,6 +562,7 @@ func autoConvert_config_RemoteScoringArgs_To_v1_RemoteScoringArgs(in *config.Rem
 	if err := metav1.Convert_string_To_Pointer_string(&in.Address, &out.Address, s); err != nil {
 		return err
 	}
+	out.Namespaces = *(*[]string)(unsafe.Pointer(&in.Namespaces))
 	return nil
 }
 

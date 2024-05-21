@@ -8,14 +8,16 @@ import (
 )
 
 type Payload struct {
-	NodeNames []string `json:"nodeNames"`
-	PodLabels []string `json:"podLabels"`
+	NodeNames  []string `json:"nodeNames"`
+	PodLabels  []string `json:"podLabels"`
+	Namespaces []string `json:"namespaces"`
 }
 
-func remoteCall(address string, nodeNames []string, podLabels []string) ([]int, error) {
+func remoteCall(address string, nodeNames []string, podLabels []string, namespaces []string) ([]int, error) {
 	payload := Payload{
-		NodeNames: nodeNames,
-		PodLabels: podLabels,
+		NodeNames:  nodeNames,
+		PodLabels:  podLabels,
+		Namespaces: namespaces,
 	}
 
 	data, err := json.Marshal(payload)

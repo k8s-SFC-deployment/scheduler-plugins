@@ -131,6 +131,11 @@ func (in *MetricProviderSpec) DeepCopy() *MetricProviderSpec {
 func (in *NetMarksArgs) DeepCopyInto(out *NetMarksArgs) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
+	if in.Namespaces != nil {
+		in, out := &in.Namespaces, &out.Namespaces
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 
@@ -328,6 +333,11 @@ func (in *PreemptionTolerationArgs) DeepCopyObject() runtime.Object {
 func (in *RemoteScoringArgs) DeepCopyInto(out *RemoteScoringArgs) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
+	if in.Namespaces != nil {
+		in, out := &in.Namespaces, &out.Namespaces
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 

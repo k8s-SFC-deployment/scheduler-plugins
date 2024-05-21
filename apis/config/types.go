@@ -290,6 +290,8 @@ type NetMarksArgs struct {
 	Address string
 	// TimeRangeInMinutes used to aggregate the network metrics
 	TimeRangeInMinutes int64
+	// Namespaces to be considered by NetMarks plugin
+	Namespaces []string
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -300,4 +302,6 @@ type RemoteScoringArgs struct {
 
 	// Address of the Remote Server
 	Address string
+	// Namespaces to be considered by RemoteScoring plugin
+	Namespaces []string
 }
