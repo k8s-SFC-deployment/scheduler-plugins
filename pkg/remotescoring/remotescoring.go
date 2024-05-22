@@ -3,7 +3,6 @@ package remotescoring
 import (
 	"context"
 	"fmt"
-	"slices"
 
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -62,7 +61,7 @@ func (pl *RemoteScoring) PreScore(ctx context.Context, cycleState *framework.Cyc
 	// time.Sleep(10 * time.Second)
 	// klog.Infof("[RemoteScoring] Sleep End")
 
-	if slices.Contains(pl.args.Namespaces, pod.Namespace) {
+	if !contains(pl.args.Namespaces, pod.Namespace) {
 		klog.Infof("[RemoteScoring] Skip pod(%s) in namespace(%s)\n", pod.Name, pod.Namespace)
 		return nil
 	}
@@ -100,7 +99,7 @@ func (pl *RemoteScoring) ScoreExtensions() framework.ScoreExtensions {
 }
 
 func (pl *RemoteScoring) Score(ctx context.Context, cycleState *framework.CycleState, pod *v1.Pod, nodeName string) (int64, *framework.Status) {
-	if slices.Contains(pl.args.Namespaces, pod.Namespace) {
+	if !contains(pl.args.Namespaces, pod.Namespace) {
 		klog.Infof("[RemoteScoring] Skip pod(%s) in namespace(%s)\n", pod.Name, pod.Namespace)
 		return 0, nil
 	}
@@ -150,4 +149,13 @@ func getPreScoreState(cycleState *framework.CycleState) (*NodeScoresStateData, e
 		return nil, fmt.Errorf("invalid PreScore state, got type %T", nodeScoresStateData)
 	}
 	return nodeScores, nil
+}
+
+func contains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
 }

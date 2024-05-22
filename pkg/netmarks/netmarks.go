@@ -3,7 +3,6 @@ package netmarks
 import (
 	"context"
 	"fmt"
-	"slices"
 	"time"
 
 	v1 "k8s.io/api/core/v1"
@@ -44,7 +43,7 @@ func (n *NetMarks) Name() string {
 }
 
 func (n *NetMarks) Score(ctx context.Context, state *framework.CycleState, p *v1.Pod, nodeName string) (int64, *framework.Status) {
-	if slices.Contains(n.namespaces, p.Namespace) {
+	if !contains(n.namespaces, p.Namespace) {
 		klog.Infof("[RemoteScoring] Skip pod(%s) in namespace(%s)\n", p.Name, p.Namespace)
 		return 0, nil
 	}
@@ -102,4 +101,13 @@ func (n *NetMarks) NormalizeScore(ctx context.Context, state *framework.CycleSta
 
 	klog.Infof("[NetMarks] Nodes final score: %v", scores)
 	return nil
+}
+
+func contains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
 }

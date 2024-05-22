@@ -266,16 +266,29 @@ func SetDefaults_NetworkTrafficArgs(args *NetworkTrafficArgs) {
 
 // SetDefaults_NetMarksArgs sets the default parameters for NetMarks plugin.
 func SetDefaults_NetMarksArgs(args *NetMarksArgs) {
+	if args.Address == nil {
+		address := "http://localhost:7029"
+		args.Address = &address
+	}
+
 	if args.TimeRangeInMinutes == nil {
 		defaultTime := int64(5)
 		args.TimeRangeInMinutes = &defaultTime
 	}
+
+	if len(args.Namespaces) == 0 {
+		args.Namespaces = []string{metav1.NamespaceDefault}
+	}
 }
 
 // SetDefault_RemoteScoringArgs sets the default parameters for RemoteScoring plugin.
-func SetDefault_ScoringArgs(args *RemoteScoringArgs) {
+func SetDefault_RemoteScoringArgs(args *RemoteScoringArgs) {
 	if args.Address == nil {
 		address := "http://localhost:7029"
 		args.Address = &address
+	}
+
+	if len(args.Namespaces) == 0 {
+		args.Namespaces = []string{metav1.NamespaceDefault}
 	}
 }
