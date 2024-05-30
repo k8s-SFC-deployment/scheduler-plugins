@@ -47,20 +47,6 @@ func New(obj runtime.Object, handle framework.Handle) (framework.Plugin, error) 
 func (pl *RemoteScoring) Name() string { return Name }
 
 func (pl *RemoteScoring) PreScore(ctx context.Context, cycleState *framework.CycleState, pod *v1.Pod, nodes []*v1.Node) *framework.Status {
-
-	/* == Test ==  */
-	// scores := make(framework.NodeScoreList, 0)
-	// for idx, node := range nodes {
-	// 	klog.Infof("[RemoteScoring] %s's score is %d\n", node.Name, idx)
-	// 	scores = append(scores, framework.NodeScore{Name: node.Name, Score: int64(idx)})
-	// }
-	// nodeScoresStateData := &NodeScoresStateData{
-	// 	scores: scores,
-	// }
-	// klog.Infof("[RemoteScoring] Sleep Start")
-	// time.Sleep(10 * time.Second)
-	// klog.Infof("[RemoteScoring] Sleep End")
-
 	if !contains(pl.args.Namespaces, pod.Namespace) {
 		klog.Infof("[RemoteScoring] Skip pod(%s) in namespace(%s)\n", pod.Name, pod.Namespace)
 		return nil
@@ -106,7 +92,7 @@ func (pl *RemoteScoring) Score(ctx context.Context, cycleState *framework.CycleS
 
 	nodeScores, err := getPreScoreState(cycleState)
 	if err != nil {
-		klog.Fatal("[RemoteScoring] getPreScoreState: %s", err.Error())
+		klog.Infof("[RemoteScoring] getPreScoreState: %s", err.Error())
 		return 0, nil
 	}
 	for _, nodeScore := range nodeScores.scores {
@@ -127,12 +113,10 @@ func (pl *RemoteScoring) NormalizeScore(ctx context.Context, cycleState *framewo
 		}
 	}
 
-	if higherScore == 0 {
-		return nil
-	}
-
-	for i, node := range scores {
-		scores[i].Score = framework.MaxNodeScore - (node.Score * framework.MaxNodeScore / higherScore)
+	if higherScore != 0 {
+		for i, node := range scores {
+			scores[i].Score = node.Score * framework.MaxNodeScore / higherScore
+		}
 	}
 
 	klog.Infof("[RemoteScoring] Nodes final score: %v", scores)

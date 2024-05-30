@@ -44,7 +44,7 @@ func (n *NetMarks) Name() string {
 
 func (n *NetMarks) Score(ctx context.Context, state *framework.CycleState, p *v1.Pod, nodeName string) (int64, *framework.Status) {
 	if !contains(n.namespaces, p.Namespace) {
-		klog.Infof("[RemoteScoring] Skip pod(%s) in namespace(%s)\n", p.Name, p.Namespace)
+		klog.Infof("[NetMarks] Skip pod(%s) in namespace(%s)\n", p.Name, p.Namespace)
 		return 0, nil
 	}
 	// Get dependent Services with target Pod
